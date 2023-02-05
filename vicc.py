@@ -4,6 +4,7 @@ szereplők = [
     "Rendőr",
     "Pap",
     "munkás",
+    "macska",
 ]
 
 tevékenység = [
