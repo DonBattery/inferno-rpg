@@ -48,7 +48,7 @@ jobs:
       - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
-          python-version: '3.9'
+          python-version: "3.9"
 
       - name: Install dependencies Including Ansible
         run: |
@@ -67,5 +67,11 @@ jobs:
           INVENTORY: ${{ secrets.ANSIBLE_INVENTORY }}
         run: echo "$INVENTORY" > inventory
 
+      - name: Debug inventory file
+        run: |
+          cat inventory
+          ansible-inventory --list -i inventory
+        shell: bash
+
       - name: Deploy to Staging with Ansible
-        run: "ansible-playbook -v -i inventory --extra-vars \"role_action=deploy discord_token=${{ secrets.DISCORD_TOKEN }}\" manage-app-server.yml"
+        run: 'ansible-playbook -v -i inventory --extra-vars "role_action=deploy discord_token=${{ secrets.DISCORD_TOKEN }}" manage-app-server.yml'
