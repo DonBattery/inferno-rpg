@@ -1,0 +1,13 @@
+---
+
+- name: Provision the app server
+  include_tasks: provision.yml
+  when:
+    - role_action == "provision"
+
+- name: Deploy the application
+  include_tasks: deploy-app.yml
+  when:
+    - role_action == "deploy" or role_action == "provision"
+
+...
