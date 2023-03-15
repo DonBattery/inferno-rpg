@@ -57,15 +57,15 @@ jobs:
 
       - name: Write SSH file
         env:
-          SSH_KEY: ${{ secrets.STAGING_SSH_KEY }}
+          SSH_KEY: ${{ secrets.ANSIBLE_SSH_KEY }}
         run: |
           echo "$SSH_KEY" > id_rsa
           chmod 600 id_rsa
 
       - name: Write Inventory file
         env:
-          INVENTORY: ${{ secrets.STAGING_INVENTORY }}
+          INVENTORY: ${{ secrets.ANSIBLE_INVENTORY }}
         run: echo "$INVENTORY" > inventory
 
       - name: Deploy to Staging with Ansible
-        run: "ansible-playbook -v -i inventory --extra-vars \"role_action=deploy discord_token=$DISCORD_TOKEN\" manage-app-server.yml"
+        run: "ansible-playbook -v -i inventory --extra-vars \"role_action=deploy discord_token=${{ secrets.DISCORD_TOKEN }}\" manage-app-server.yml"
