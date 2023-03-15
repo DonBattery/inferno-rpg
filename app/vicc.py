@@ -1,37 +1,73 @@
 import random
 
 szereplők = [
-    "Rendőr",
-    "Pap",
+    "rendőr",
+    "pap",
     "munkás",
     "macska",
+    "apáca",
+    "zsidó",
+    "cigány",
+    "bohóc",
+    "katona",
+    "rokfortos pizza",
+    "dinoszaurusz csontváz",
+    "tengerbiológus",
+    "kamikaze pilóta",
 ]
 
 tevékenység = [
     "ül a vécén",
     "levitál",
-    "ugrik",
+    "ugróiskolázik",
+    "horgászik",
+    "cigizik",
+    "kóborol",
+    "kincset keres",
+    "vadászik",
+    "iszogat",
+    "mozizik",
+    "szotyizik",
 ]
 
 helyszín = [
     "parkban",
-    "ünzletben",
+    "üzletben",
     "fürdőkádban",
+    "francia tengerparton",
+    "a háború kellős közepén",
+    "a világ végén",
+    "a sárkány barlangjában",
+    "egy csónakban a tenger közepén",
+    "egy lakatlan szigeten",
+    "egy oázisban",
+    "a Madonna koncerten",
+    "egy elsüllyedt hajóban",
+    "egy lezuhant repülőben a dzungel közepén",
 ]
 
 mondat_a = [
-    "dikk lesett a számítógépem",
-    "fejbeverlek egy kuglival",
-    " ümmm de szaftos ez a csótány",
+    "Dikk lesett a számítógépem!",
+    "Fejbeverlek egy kuglival!",
+    "ümmm de szaftos ez a csótány",
+    "Kaszáltál már lekváros batyút szembeszélben?",
+    "Hány éves a kapitány?",
+    "Mikor jönnek a többiek?",
+    "Hová lett a töpörtyű?",
 ]
 
 mondat_b = [
-    "kostoldad már a kislábujam?",
-    "szerintem akkor is egy gila vagy",
+    "Kostoldad már a kislábujam?",
+    "Szerintem akkor is egy gila vagy.",
     "Nem! Lekváros!",
+    "Éljen a kommunizmus!",
+    "Nem! A válaszom: nem.",
+    "Ez a vicc is de meg változott",
+    "Vigyázzon édesapám! Saját maga felé dől!",
+    "Denevéreset???",
 ]
 
 def új_vicc():
-    return f"""Két {szereplők[random.randint(0, len(szereplők) - 1)]} {tevékenység[random.randint(0, len(tevékenység) - 1)]} a {helyszín[random.randint(0, len(helyszín) - 1)]}. 
-Ígyszól az egyik: {mondat_a[random.randint(0, len(mondat_a) - 1)]}
-Mire a másik: {mondat_b[random.randint(0, len(mondat_b) - 1)]}"""
+    return f"""Két {random.choice(szereplők)} {random.choice(tevékenység)} a {random.choice(helyszín)}. 
+Ígyszól az egyik: {random.choice(mondat_a)}
+Mire a másik: {random.choice(mondat_b)}"""
