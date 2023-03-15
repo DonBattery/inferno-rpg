@@ -1,7 +1,7 @@
 # This example requires the 'members' privileged intent to use the Member converter
 # and the 'message_content' privileged intent for prefixed commands.
 
-import random
+import os
 
 import discord
 from discord.ext import commands
@@ -32,4 +32,4 @@ async def vicc(ctx: commands.Context):
     """Véletlen vicc"""
     await ctx.send(új_vicc())
 
-bot.run("ide jön a Discord token")
+bot.run(os.getenv("DISCORD_TOKEN"))

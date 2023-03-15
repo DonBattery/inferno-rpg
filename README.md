@@ -1,2 +1,4 @@
-# inferno-rpg
-Egyszerű Discord RPG csetbot
+# Inferno RPG
+egy Discord kaland játék
+
+![Inferno logo](doc/icon.png)

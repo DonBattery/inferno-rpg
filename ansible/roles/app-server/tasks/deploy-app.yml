@@ -1,0 +1,10 @@
+---
+
+- name: Pull and run the latest image from Docker hub
+  ansible.builtin.docker_container:
+    name: inferno-rpg
+    image: donbattery/inferno-rpg:latest
+    state: started
+    pull: true
+    env:
+      DISCORD_TOKEN: "{{ discord_token }}"

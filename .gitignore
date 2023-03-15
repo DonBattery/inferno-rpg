@@ -1,0 +1,5 @@
+ansible/id_rsa
+ansible/inventory
+DISCORD_TOKEN
+__pycache__
+.vscode
