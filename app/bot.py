@@ -7,8 +7,7 @@ import os
 import discord
 from discord.ext import commands
 
-from vicc import új_vicc
-import database
+import handlers
 
 description = """
 Egyszerű szöveges kaland RPG
@@ -23,6 +22,9 @@ bot = commands.Bot(
     intents=intents,
 )
 
+# Kivesszük az eredeti !help parancsot, hogy betehessük a sajátunkat.
+bot.remove_command('help')
+
 @bot.event
 async def on_ready():
     print(f"Logged in as {bot.user} (ID: {bot.user.id})")
@@ -31,36 +33,31 @@ async def on_ready():
 @bot.command()
 async def vicc(ctx: commands.Context):
     """Véletlen vicc"""
-    await ctx.send(új_vicc())
+    await ctx.send(handlers.handle_vicc())
+
+@bot.command(aliases=["test"])
+async def teszt(ctx: commands.Context, *args):
+    """Teszt parancs"""
+    await ctx.send(f"{ctx.author.mention} {handlers.handle_teszt(*args)}")
+
+@bot.command()
+async def help(ctx: commands.Context, *args):
+    """Teszt parancs"""
+    await ctx.send(handlers.handle_help(*args))
 
 @bot.command()
 async def profil(ctx: commands.Context):
     """Karakter profil"""
-    character = database.get_character_by_id(ctx.author.id)
-    if character:
-        await ctx.send(f"Név: {character['name']} Nem: {character['sex']} Faj: {character['race']} Kaszt: {character['job']}")
-    else:
-        await ctx.send("Neked még nincs karaktered de az `!újkarakter` parancsal csinálhatsz egyet magadnak.")
+    await ctx.send(f"{ctx.author.mention} {handlers.handle_profil(ctx.author.id)}")
 
-@bot.command()
-async def újkarakter(ctx: commands.Context, name, sex, race, job):
+@bot.command(aliases=["ujkarakter"])
+async def újkarakter(ctx: commands.Context, *args):
     """Új karakter alkotás"""
-    character = database.get_character_by_id(ctx.author.id)
-    if character:
-        await ctx.send(f"Neked már van egy {character['name']} nevű karaktered előszőr meg kell ölnöd őt az `!öljmegmost` parancsal, hogy újat kreálhass.")
-    else:
-        new_character = database.new_character(ctx.author.id, name, sex, race, job)
-        database.add_character(new_character)
-        await ctx.send(f"Új karaktered a {new_character['sex']} {new_character['job']} {new_character['race']} név szerint {new_character['name']} megkezdheti kalandozásait a világban a `!profil` parancsal megtekintheted a profilod.")
+    await ctx.send(f"{ctx.author.mention} {handlers.handle_újkarakter(ctx.author.id, *args)}")
 
-@bot.command()
+@bot.command(aliases=["oljmegmost"])
 async def öljmegmost(ctx: commands.Context):
     """Megöli a karaktered a lelkét elűzi a sötét síkra"""
-    character = database.get_character_by_id(ctx.author.id)
-    if character:
-        database.kill_character_by_id(ctx.author.id)
-        await ctx.send(f"{character['name']} utolérte a végzet, lelke örökre elveszet a sötét síkon. De kreálhatsz magadnak egy új karaktert a `!újkarakter` paranccsal.")
-    else:
-        await ctx.send("Neked még nincs karaktered de az `!újkarakter` parancsal csinálhatsz egyet magadnak.")
+    await ctx.send(f"{ctx.author.mention} {handlers.handle_öljmegmost(ctx.author.id)}")
 
 bot.run(os.getenv("DISCORD_TOKEN"))
