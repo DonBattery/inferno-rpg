@@ -1,2 +1,6 @@
+# requirements.txt
+
+# Python-os package-k vagyis csomagok felsorolása. Ezeket kell feltelepíteni ahhoz, hogy futtathassuk a programot.
+
 discord.py
 texttable

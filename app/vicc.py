@@ -1,3 +1,7 @@
+# vicc.py
+
+# Ebben a file-ban van az új_vicc parancs ami egy új véletlen vicc generálásáért felelős
+
 import random
 
 szereplők = [

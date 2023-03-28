@@ -1,4 +1,11 @@
+# game_world.py
+
+# Ebben a file-ban konstans adatok vannak Inferno világáról. Itt található az összes help szöveg is
+# és a hozzá tartozó generáló funkciók is.
+
 from texttable import Texttable
+
+from utility import to_text_box
 
 # Fajok
 races = {
@@ -55,17 +62,6 @@ jobs = {
 
 levels = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
 
-def new_character(id, name, race, job):
-    return {
-        "id":id,
-        "name": name,
-        "race":race,
-        "job": job,
-        "level": 1,
-        "xp": 0,
-        "next_level": levels[0],
-    }
-
 help_texts = {
     "commands": {
         "help": {
@@ -98,12 +94,6 @@ Játszható kasztok: {', '.join(jobs.keys())}"""
         },
     },
 }
-
-def to_text_box(input_text:str) ->str:
-    "Egy Discord-os szöveg dobozt csinál a bemeneti szövegből"
-    return f"""```TEXT
-{input_text}
-```"""
 
 def available_commands() -> str:
     "Csinál egy szépen rendezett táblázatot a hozzáférhető parancsokból"
