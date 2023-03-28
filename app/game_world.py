@@ -1,7 +1,7 @@
 # game_world.py
 
 # Ebben a file-ban konstans adatok vannak Inferno világáról. Itt található az összes help szöveg is
-# és a hozzá tartozó generáló funkciók is.
+# és a hozzá tartozó generáló funkciók is. Illetve az új adatok készítéséhez használt funkciók.
 
 from texttable import Texttable
 
@@ -128,3 +128,14 @@ Használható parancsok:
         if "long" in help_texts["commands"][command_name]:
             out = help_texts["commands"][command_name]["long"]
         return to_text_box(out)
+
+def new_character(id, name, race, job):
+    return {
+        "id":id,
+        "name": name,
+        "race":race,
+        "job": job,
+        "level": 1,
+        "xp": 0,
+        "next_level": levels[0],
+    }
