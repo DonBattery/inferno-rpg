@@ -1,8 +1,0 @@
----
-# Default variables for the App Server role
-
-app_environment: test
-
-app_user: ubuntu
-
-app_directory: "/app"

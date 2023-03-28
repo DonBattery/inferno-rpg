@@ -1,4 +1,5 @@
 ---
+# Ez az Ansible playbook felinstallálja a Docker-t
 
 - name: Add Docker GPG apt repository key.
   ansible.builtin.get_url:

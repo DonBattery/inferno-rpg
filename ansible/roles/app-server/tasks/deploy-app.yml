@@ -1,4 +1,6 @@
 ---
+# Ebben az Ansible playbook-ban csak egy lépés van, ami lehúzza a Docker hub-ról a legfrissebb Docker image-t
+# És elindítja / újraindítja vele a Docker konténert.
 
 - name: Pull and run the latest image from Docker hub
   ansible.builtin.docker_container:

@@ -1,4 +1,5 @@
 ---
+# Ez az app-server Ansible role fő file-ja. A role_action változó értéke szerint dönt, hogy melyik playbook-ot hívja meg.
 
 - name: Provision the app server
   include_tasks: provision.yml
