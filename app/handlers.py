@@ -7,12 +7,16 @@ from vicc import új_vicc
 import game_world
 import database
 import validate
+import utility
 
 def handle_vicc() -> str:
     return új_vicc()
 
 def handle_teszt(*args) -> str:
     return f"Teszt: {args}"
+
+def handle_csontimondja(*args) -> str:
+    return utility.csonti_mondja(*args)
 
 def handle_help(*args) -> str:
     if len(args) == 0:

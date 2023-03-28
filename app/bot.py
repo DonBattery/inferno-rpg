@@ -51,6 +51,11 @@ async def vicc(ctx: commands.Context):
     """Véletlen vicc"""
     await ctx.send(handlers.handle_vicc())
 
+@bot.command()
+async def csontimondja(ctx: commands.Context, *args):
+    """Kimondatja Csontival az input-ot"""
+    await ctx.send(handlers.handle_csontimondja(*args))
+
 @bot.command(aliases=["test"])
 async def teszt(ctx: commands.Context, *args):
     """Teszt parancs"""
