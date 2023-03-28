@@ -4,3 +4,4 @@ DISCORD_TOKEN
 __pycache__
 .vscode
 app/.env
+./env/

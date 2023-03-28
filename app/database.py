@@ -1,3 +1,9 @@
+# database.py
+
+# Ez a file kezeli az adatbázist. Itt találhatóak azok a funkciók, amik dinamikus adatokat kezelnek.
+# Például a játékos karakterek profiljait, az ismert helyszíneket, stb. Ezekkel a funkciókkal lehet
+# kivenni, betenni és keresni az adatbázisban.
+
 characters=[]
 
 def add_character(character):

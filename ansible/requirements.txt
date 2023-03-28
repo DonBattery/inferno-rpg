@@ -1,3 +1,5 @@
+# Ez minden Pythonos függősége az Ansible autómatizációnknak. Ugyan úgy pip-el kell felinstallálni őket.
+
 ansible==2.10.7
 ansible-lint==6.0.2
 jsondiff==2.0.0

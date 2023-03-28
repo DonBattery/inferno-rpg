@@ -1,4 +1,7 @@
 ---
+# Ez file az Ansible autómatizációnk bemeneti pontja. Ezt futtatjuk az ansible-playbook paranccsal,
+# ez "hívja rá" az app-server role-t az inventory-ban található szerverekre (esetünkben egy, az az egy darabra)
+
 - name: "Manage Inferno RPG server"
   hosts: all
   vars:

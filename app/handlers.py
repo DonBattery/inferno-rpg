@@ -1,9 +1,10 @@
 # handlers.py
+
 # Ebben a file-ban van az összes handler funkció. Ezek olyan funkciók amelyek egy egy
 # Discord arancs kezeléséjér felelősek (handle = kezelni).
 
 from vicc import új_vicc
-import game_data
+import game_world
 import database
 import validate
 
@@ -15,9 +16,9 @@ def handle_teszt(*args) -> str:
 
 def handle_help(*args) -> str:
     if len(args) == 0:
-        return game_data.generate_help()
+        return game_world.generate_help()
     else:
-        return game_data.generate_help(args[0])
+        return game_world.generate_help(args[0])
 
 def handle_profil(id:int) -> str:
     character = database.get_character_by_id(id)
@@ -47,7 +48,7 @@ def handle_újkarakter(id:int, *args) -> str:
         valid, msg = validate.validate_job(args[2])
         if not valid:
             return msg
-        new_character = game_data.new_character(id, args[0], args[1], args[2])
+        new_character = game_world.new_character(id, args[0], args[1], args[2])
         database.add_character(new_character)
         return f"Új karaktered a {new_character['job']} {new_character['race']} név szerint {new_character['name']} megkezdheti kalandozásait Infernó világán. A `!profil` parancsal megtekintheted a profilod."
 
