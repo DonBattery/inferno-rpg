@@ -1,7 +1,9 @@
 ---
-# This action should run on every push except on push to master
+# Ez a folyamat minden branch változtatásnál megfut kivéve ha a master változik.
+# Elvben ez felelős azért, hogy ne kerülhessen hibás kód a master-re.
+# Csak olyan pull request-et szabad mergelni, amin kizöldült ez a folyamat.
 
-name: CI
+name: Teszt
 
 on:
   push:
@@ -9,7 +11,7 @@ on:
       - master
 
 jobs:
-  ci:
+  docker-test:
     runs-on: ubuntu-latest
     steps:
       - name: Set up Docker Buildx

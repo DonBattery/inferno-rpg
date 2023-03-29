@@ -1,7 +1,10 @@
 ---
-# This action should run only when a feature branch is merged to the master branch
+# Ez az akció akkor fut ha egy brencset belemerdzseltek a mászterbe.
+# Megbuildeli az alkalmazás Docker képét és felpusholja a Docker hub-ra, a latest teggel.
+# Utána megkeresi az AWS-en az inferno-rpg-server nevű EC2 gépet, és betelefonál,
+# hogy ugyan futtassa most már a latest image-ból az inferno-rpg Docker konténert.
 
-name: CD
+name: Deployment
 
 on:
   pull_request:
@@ -34,7 +37,7 @@ jobs:
           push: true
           tags: donbattery/inferno-rpg:latest
 
-  deploy-to-staging:
+  deploy-to-AWS:
     needs: [build-and-push-docker-image]
     runs-on: ubuntu-latest
     defaults:
@@ -62,10 +65,18 @@ jobs:
           echo "$SSH_KEY" > id_rsa
           chmod 600 id_rsa
 
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-1
+
+      - name: Set up JQ
+        run: sudo apt-get install jq
+
       - name: Write Inventory file
-        env:
-          INVENTORY: ${{ secrets.ANSIBLE_INVENTORY }}
-        run: echo "$INVENTORY" > inventory
+        run: ./create_inventory.sh > inventory
 
       - name: Debug inventory file
         run: |
