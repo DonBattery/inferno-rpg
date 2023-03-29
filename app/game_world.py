@@ -3,6 +3,8 @@
 # Ebben a file-ban konstans adatok vannak Inferno világáról. Itt található az összes help szöveg is
 # és a hozzá tartozó generáló funkciók is. Illetve az új adatok készítéséhez használt funkciók.
 
+import random
+
 from texttable import Texttable
 
 from utility import to_text_box
@@ -49,15 +51,124 @@ races = {
 
 # Kasztok
 jobs = {
-    "harcos":{},
-    "vadász":{},
-    "varázsló":{},
-    "pap":{},
-    "druida":{},
-    "íjász":{},
-    "bányász":{},
-    "szerzetes":{},
-    "ninja":{},
+    "harcos":{
+        "inventory": [
+            {
+                "item_type": "weapon",
+                "min_damage":1,
+                "max_damage":2, 
+            },
+        ],
+        "skill": [
+            {
+                "skill_name": "vadászat",
+                "skill_level": 3,
+            },
+            {
+                "skill_name": "halászat",
+                "skill_level": 2,
+            },
+            {
+                "skill_name": "gyógynövény_keresés",
+                "skill_level": 1,
+            },
+            {
+                "skill_name": "kraft",
+                "skill_level": 2,
+            },
+        ],
+        "bonus": [
+            {
+                "bonus_type": "strength",
+                "bonus_value": 2,
+            },
+            {
+                "bonus_type": "agility",
+                "bonus_value": 1,
+            },
+        ],
+    },
+    "vadász":{
+        "bonus": [
+            {
+                "bonus_type": "strength",
+                "bonus_value": 1,
+            },
+            {
+                "bonus_type": "agility",
+                "bonus_value": 2,
+            },
+        ],
+    },
+    "varázsló":{
+        "bonus": [
+            {
+                "bonus_type": "cleverness",
+                "bonus_value": 3,
+            },
+        ],
+    },
+    "pap":{
+        "bonus": [
+            {
+                "bonus_type": "strength",
+                "bonus_value": 1,
+            },
+            {
+                "bonus_type": "cleverness",
+                "bonus_value": 2,
+            },
+        ],
+    },
+    "druida":{
+        "bonus": [
+            {
+                "bonus_type": "strength",
+                "bonus_value": 1,
+            },
+            {
+                "bonus_type": "agility",
+                "bonus_value": 1,
+            },
+            {
+                "bonus_type": "cleverness",
+                "bonus_value": 1,
+            },
+        ]
+    },
+    "íjász":{
+        "bonus": [
+    
+            {
+                "bonus_type": "agility",
+                "bonus_value": 3,
+            },
+        ]
+    },
+    "bányász":{
+        "bonus": [
+            {
+                "bonus_type": "strength",
+                "bonus_value": 3,
+            },
+        ]
+    },
+    "szerzetes":{
+        "bonus": [
+            {
+                "bonus_type": "strength",
+                "bonus_value": 3,
+            },
+        ]
+    },
+    "ninja":{
+        "bonus": [
+            {
+                "bonus_type": "agility",
+                "bonus_value": 2,
+            },
+        ]
+    },
 }
 
 levels = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
@@ -130,7 +241,7 @@ Használható parancsok:
         return to_text_box(out)
 
 def new_character(id, name, race, job):
-    return {
+    character = {
         "id":id,
         "name": name,
         "race":race,
@@ -138,4 +249,10 @@ def new_character(id, name, race, job):
         "level": 1,
         "xp": 0,
         "next_level": levels[0],
+        "strength": random.randint(races[race]["min_strength"], races[race]["max_strength"]),
+        "agility": random.randint(races[race]["min_agility"], races[race]["max_agility"]),
+        "cleverness": random.randint(races[race]["min_cleverness"], races[race]["max_cleverness"]),
     }
+    for bonus in jobs[job]["bonus"]:
+        character[bonus["bonus_type"]] += bonus["bonus_value"]
+    return character
