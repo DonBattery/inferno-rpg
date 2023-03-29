@@ -29,9 +29,17 @@ def handle_profil(id:int) -> str:
     if character:
         return f"""a karaktered profilja:
 ```TEXT
-Név: {character['name']}
-Faj: {character['race']}
-Kaszt: {character['job']}
+Név            : {character['name']}
+Faj            : {character['race']}
+Kaszt          : {character['job']}
+---
+Szint          : {character['level']}
+Tapasztalat    : {character['xp']}
+Következő_szint: {character['next_level']}
+---
+Erő            : {character['strength']}
+Ügyesség       : {character['agility']}
+Okosság        : {character['cleverness']}
 ```"""
     else:
         return "Neked még nincs karaktered, de az `!újkarakter` paranccsal kreálhatsz egyet magadnak."
