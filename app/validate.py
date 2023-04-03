@@ -7,6 +7,9 @@
 # ami megmondja, hogy a bemeneti érték érvényes-e. A második egy string ami a hiba üzenetet tartalmazza,
 # ennek csak akkor van értéke ha a bemeneti érték érvénytelen (pl.: "A Névnek legalább 3 karakter hosszúnak kell lennie.").
 
+import regex
+import re
+
 import database
 import game_world
 
@@ -28,3 +31,20 @@ def validate_job(job:str) -> tuple:
     if not job in game_world.jobs:
         return (False, f"A {job} nem játszható kaszt. Játszható kasztok: {', '.join(game_world.jobs.keys())}")
     return (True, "")
+
+def validate_csonti_pinput(input_str:str) -> tuple:
+    # Megnézzük vannak-e Emoji-k 🐸
+    emoji_pattern = re.compile("["
+                                u"\U0001F600-\U0001F64F"  # emoticons
+                                u"\U0001F300-\U0001F5FF"  # symbols & pictographs
+                                u"\U0001F680-\U0001F6FF"  # transport & map symbols
+                                u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
+                                "]+", flags=re.UNICODE)
+    if emoji_pattern.search(input_str):
+        return (False, "Csonti nem beszéli az emódzsík nyelvét...")
+
+    # Csak Magyar szavakart engedünk, Arab számokat és alap írásjeleket.
+    if regex.fullmatch(r'^[\w\s\p{P}]+$', input_str):
+        return (True, "")
+    else:
+        return (False, "Csonti nem fog ilyen hieroglifákat mondani...")
