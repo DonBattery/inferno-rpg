@@ -4,3 +4,4 @@
 
 discord.py
 texttable
+regex
