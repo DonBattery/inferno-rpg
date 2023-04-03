@@ -16,7 +16,7 @@ def handle_teszt(*args) -> str:
     return f"Teszt: {args}"
 
 def handle_csontimondja(*args) -> str:
-    return utility.csonti_mondja(*args)
+    return utility.csonti_mondja2(*args, max_width=42)
 
 def handle_help(*args) -> str:
     if len(args) == 0:
