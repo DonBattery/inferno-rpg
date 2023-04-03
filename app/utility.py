@@ -18,6 +18,34 @@ def csonti_mondja(*args) -> str:
     \|/_/ {input_text} \\
     ||| \{'_' * int(len(input_text) + 2)}/""")
 
+def justify_line(line:list, width: int) -> list:
+    remaining_space = width - len(''.join(line))
+    number_of_words = len(line)
+    out_line = line[:]
+    while remaining_space:
+        word_index = 0
+        for word in line:
+            word_index += 1
+            if remaining_space > 0 and word_index < number_of_words:
+                out_line[word_index - 1] += ' '
+                remaining_space -= 1
+            else:
+                continue
+    return out_line
+
+def justify_box(input_lines:list, box_width:int) -> list:
+    output_lines = []
+    line_index = 0
+    for line in input_lines:
+        line_index += 1
+        if line_index < len(input_lines):
+            output_lines.append(justify_line(line, box_width))
+        else:
+            output_lines.append(line)
+    return output_lines
+
+
+
 # Ez az algoritmus lebont egy szavakból álló listát, egy táblázattá (listák listája)
 # minden sorban a szavak hosszának összege plusz a hozzájuk adott szóközök, nem lehetnek nagyobbak,
 # mint a bemeneti box_width, az az doboz szélesség. A túl hosszú szavakat eltördeli.
@@ -53,11 +81,11 @@ def warp_words_to_box(words:list, box_width:int) -> list:
             subline = []
             subline.append(word)
             subline_counter = len(word)
-        
+
     if len(subline):
         result.append(subline)
 
-    return result
+    return justify_box(result, box_width)
 
 def csonti_mondja2(*args, max_width:int) -> str:
     valid, error = validate.validate_csonti_pinput(''.join(args))
@@ -66,6 +94,7 @@ def csonti_mondja2(*args, max_width:int) -> str:
     res = warp_words_to_box(args, max_width - 12)
     width = 0
     for line in res:
+        print("Line to join", line)
         line_width = len(''.join(line))
         if line_width > width:
             width = line_width
