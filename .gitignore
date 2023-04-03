@@ -1,6 +1,6 @@
 ansible/id_rsa
 ansible/inventory
-DISCORD_TOKEN
+*DISCORD_TOKEN
 __pycache__
 .vscode
 app/.env
