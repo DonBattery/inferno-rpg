@@ -109,6 +109,6 @@ jobs:
           echo "CONTAINER_IMAGE_TAG=latest" >> $GITHUB_ENV
 
       - name: Deploy to AWS with Ansible
-        run: 'ansible-playbook -v -i inventory --extra-vars "role_action=deploy discord_token=${{ env.DISCORD_TOKEN }} container_name={{ env.CONTAINER_NAME }} container_iamge_tag={{ env.CONTAINER_IMAGE_TAG }}" manage-app-server.yml'
+        run: 'ansible-playbook -v -i inventory --extra-vars "role_action=deploy discord_token=${{ env.DISCORD_TOKEN }} container_name=${{ env.CONTAINER_NAME }} container_iamge_tag=${{ env.CONTAINER_IMAGE_TAG }}" manage-app-server.yml'
 
 ...
