@@ -85,17 +85,13 @@ jobs:
       - name: Debug inventory file
         run: |
           cat inventory
-          retries=3
-          success=false
-          while [[ $retries -gt 0 ]]; do
-            ansible-inventory --list -i inventory && { success=true; break; } || { success=false; }
-            echo "Retrying... ($((--retries)) retries left)"
-            sleep 5
-          done
-          if [[ $success == "false" ]]; then
-            echo "Failed after multiple retries"
-            exit 1
-          fi
+          type ansible
+          ansible --version
+          type ansible-playbook
+          ansible-playbook --version
+          type ansible-inventory
+          ansible-inventory --version
+          ansible-inventory --list -i inventory
         shell: bash
 
       - name: Deploy to Staging with Ansible
