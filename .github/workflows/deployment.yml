@@ -7,18 +7,22 @@
 name: Deployment
 
 on:
-  pull_request:
-    branches:
+  # pull_request:
+  #   branches:
+  #     - master
+  #   types:
+  #     - closed
+
+  push:
+    branches-ignore:
       - master
-    types:
-      - closed
 
 # Steve
 jobs:
   build-and-push-docker-image:
     # CD Conditions
     # Only run when a pull request is merged
-    if: github.event.pull_request.merged == true
+    # if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: Set up Docker Buildx
@@ -81,7 +85,17 @@ jobs:
       - name: Debug inventory file
         run: |
           cat inventory
-          ansible-inventory --list -i inventory
+          retries=3
+          success=false
+          while [[ $retries -gt 0 ]]; do
+            ansible-inventory --list -i inventory && { success=true; break; } || { success=false; }
+            echo "Retrying... ($((--retries)) retries left)"
+            sleep 5
+          done
+          if [[ $success == "false" ]]; then
+            echo "Failed after multiple retries"
+            exit 1
+          fi
         shell: bash
 
       - name: Deploy to Staging with Ansible
