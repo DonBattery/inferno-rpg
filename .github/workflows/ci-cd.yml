@@ -1,29 +1,18 @@
 ---
-# Ez az akció akkor fut ha egy brencset belemerdzseltek a mászterbe.
-# Megbuildeli az alkalmazás Docker képét és felpusholja a Docker hub-ra, a latest teggel.
-# Utána megkeresi az AWS-en az inferno-rpg-server nevű EC2 gépet, és betelefonál,
-# hogy ugyan futtassa most már a latest image-ból az inferno-rpg Docker konténert.
-
-name: Deployment
 
 on:
-  # pull_request:
-  #   branches:
-  #     - master
-  #   types:
-  #     - closed
-
   push:
     branches-ignore:
-      - master
+      - 'master'
+  pull_request:
+    branches:
+      - 'master'
+    types:
+      - closed
 
 # Steve
 jobs:
   build-and-push-docker-image:
-    if: false
-    # CD Conditions
-    # Only run when a pull request is merged
-    # if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
       - name: Set up Docker Buildx
@@ -35,15 +24,22 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push Docker image with the "latest" tag
+      - name: Set Docker tag to test (Staging environment)
+        if: github.event_name == 'push'
+        run: echo "DOCKER_TAG=test" >> $GITHUB_ENV
+
+      - name: Set Docker tag to latest (Production environment)
+        if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
+        run: echo "DOCKER_TAG=latest" >> $GITHUB_ENV
+
+      - name: Build and push Docker image
         uses: docker/build-push-action@v3
         with:
           context: "{{defaultContext}}:app"
           push: true
-          tags: donbattery/inferno-rpg:latest
+          tags: donbattery/inferno-rpg:${{ env.DOCKER_TAG }}
 
   deploy-to-AWS:
-    if: false
     needs: [build-and-push-docker-image]
     runs-on: ubuntu-latest
     defaults:
@@ -98,5 +94,21 @@ jobs:
           ansible-inventory --list -i inventory
         shell: bash
 
-      - name: Deploy to Staging with Ansible
-        run: 'ansible-playbook -v -i inventory --extra-vars "role_action=deploy discord_token=${{ secrets.DISCORD_TOKEN }}" manage-app-server.yml'
+      - name: Set Discord token for Staging environment
+        if: github.event_name == 'push'
+        run: |
+          echo "DISCORD_TOKEN=${{ secrets.STAGING_DISCORD_TOKEN }}" >> $GITHUB_ENV
+          echo "CONTAINER_NAME=inferno-rpg-staging" >> $GITHUB_ENV
+          echo "CONTAINER_IMAGE_TAG=test" >> $GITHUB_ENV
+
+      - name: Set Discord token for Production environment
+        if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
+        run: |
+          echo "DISCORD_TOKEN=${{ secrets.PRODUCTION_DISCORD_TOKEN }}" >> $GITHUB_ENV
+          echo "CONTAINER_NAME=inferno-rpg-production" >> $GITHUB_ENV
+          echo "CONTAINER_IMAGE_TAG=latest" >> $GITHUB_ENV
+
+      - name: Deploy to AWS with Ansible
+        run: 'ansible-playbook -v -i inventory --extra-vars "role_action=deploy discord_token=${{ env.DISCORD_TOKEN }} container_name={{ env.CONTAINER_NAME }} container_iamge_tag={{ env.CONTAINER_IMAGE_TAG }}" manage-app-server.yml'
+
+...
