@@ -1,5 +1,8 @@
 ---
 
+# This workflow triggers if a feature branch is changed or merged to the master branch.
+name: Test Build and Deploy
+
 on:
   push:
     branches-ignore:
@@ -13,6 +16,7 @@ on:
 # Steve
 jobs:
   build-and-push-docker-image:
+    name: Build and push Docker image
     runs-on: ubuntu-latest
     steps:
       - name: Set up Docker Buildx
@@ -40,6 +44,9 @@ jobs:
           tags: donbattery/inferno-rpg:${{ env.DOCKER_TAG }}
 
   deploy-to-AWS:
+    name: Deploy to AWS
+    # This job only runs if a feature branch is merged to the master branch
+    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
     needs: [build-and-push-docker-image]
     runs-on: ubuntu-latest
     defaults:
@@ -55,7 +62,7 @@ jobs:
         with:
           python-version: "3.9"
 
-      - name: Install dependencies Including Ansible
+      - name: Install dependencies, including Ansible
         run: |
           python -m pip install --upgrade pip
           python -m venv venv
@@ -82,33 +89,7 @@ jobs:
       - name: Write Inventory file
         run: ./create_inventory.sh > inventory
 
-      - name: Debug inventory file
-        run: |
-          cat inventory
-          type ansible
-          ansible --version
-          type ansible-playbook
-          ansible-playbook --version
-          type ansible-inventory
-          ansible-inventory --version
-          ansible-inventory --list -i inventory
-        shell: bash
-
-      - name: Set Discord token for Staging environment
-        if: github.event_name == 'push'
-        run: |
-          echo "DISCORD_TOKEN=${{ secrets.STAGING_DISCORD_TOKEN }}" >> $GITHUB_ENV
-          echo "CONTAINER_NAME=inferno-rpg-staging" >> $GITHUB_ENV
-          echo "CONTAINER_IMAGE_TAG=test" >> $GITHUB_ENV
-
-      - name: Set Discord token for Production environment
-        if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
-        run: |
-          echo "DISCORD_TOKEN=${{ secrets.PRODUCTION_DISCORD_TOKEN }}" >> $GITHUB_ENV
-          echo "CONTAINER_NAME=inferno-rpg-production" >> $GITHUB_ENV
-          echo "CONTAINER_IMAGE_TAG=latest" >> $GITHUB_ENV
-
       - name: Deploy to AWS with Ansible
-        run: 'ansible-playbook -v -i inventory --extra-vars "role_action=deploy discord_token=${{ env.DISCORD_TOKEN }} container_name=${{ env.CONTAINER_NAME }} container_iamge_tag=${{ env.CONTAINER_IMAGE_TAG }}" manage-app-server.yml'
+        run: 'ansible-playbook -v -i inventory --extra-vars "role_action=deploy discord_token=${{ secrets.PRODUCTION_DISCORD_TOKEN }}" manage-app-server.yml'
 
 ...
