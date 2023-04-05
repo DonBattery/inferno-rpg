@@ -1,22 +1,44 @@
 ---
-
 # This workflow triggers if a feature branch is changed or merged to the master branch.
 name: Test Build and Deploy
 
 on:
   push:
     branches-ignore:
-      - 'master'
+      - "master"
   pull_request:
     branches:
-      - 'master'
+      - "master"
     types:
       - closed
 
 # Steve
 jobs:
+  python-unit-tests:
+    name: Python unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.9"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m venv venv
+          source venv/bin/activate
+          pip install -r app/requirements.txt
+
+      - name: Run tests
+        run: pytest
+
   build-and-push-docker-image:
     name: Build and push Docker image
+    needs: [python-unit-tests]
     runs-on: ubuntu-latest
     steps:
       - name: Set up Docker Buildx
@@ -91,5 +113,3 @@ jobs:
 
       - name: Deploy to AWS with Ansible
         run: 'ansible-playbook -v -i inventory --extra-vars "role_action=deploy discord_token=${{ secrets.PRODUCTION_DISCORD_TOKEN }}" manage-app-server.yml'
-
-...

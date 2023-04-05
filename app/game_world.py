@@ -208,7 +208,7 @@ Játszható kasztok: {', '.join(jobs.keys())}"""
 
 def available_commands() -> str:
     "Csinál egy szépen rendezett táblázatot a hozzáférhető parancsokból"
-    tab = Texttable(max_width=120)
+    tab = Texttable(max_width=42)
     tab.header(["Parancs", "Leírás"])
     for command in help_texts["commands"]:
         tab.add_row(["!" + command, help_texts["commands"][command]["short"]])
