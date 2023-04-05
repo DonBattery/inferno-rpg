@@ -34,7 +34,9 @@ jobs:
           pip install -r app/requirements.txt
 
       - name: Run tests
-        run: python -m pytest
+        run: |
+          source venv/bin/activate
+          python -m pytest
 
   build-and-push-docker-image:
     name: Build and push Docker image
