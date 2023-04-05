@@ -44,8 +44,6 @@ def justify_box(input_lines:list, box_width:int) -> list:
             output_lines.append(line)
     return output_lines
 
-
-
 # Ez az algoritmus lebont egy szavakból álló listát, egy táblázattá (listák listája)
 # minden sorban a szavak hosszának összege plusz a hozzájuk adott szóközök, nem lehetnek nagyobbak,
 # mint a bemeneti box_width, az az doboz szélesség. A túl hosszú szavakat eltördeli.
