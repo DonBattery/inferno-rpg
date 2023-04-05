@@ -32,6 +32,7 @@ jobs:
           python -m venv venv
           source venv/bin/activate
           pip install -r app/requirements.txt
+          pip install pytest
 
       - name: Run tests
         run: |
@@ -52,6 +53,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      # set the Docker image tag according to the environment
       - name: Set Docker tag to test (Staging environment)
         if: github.event_name == 'push'
         run: echo "DOCKER_TAG=test" >> $GITHUB_ENV

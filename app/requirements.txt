@@ -1,6 +1,3 @@
-# requirements.txt
-# Ez a file írja le, hogy milyen más Python package-k kellenek a program futtatásához (és teszteléséhez).
 discord.py==2.2.2
 regex==2023.3.23
 texttable==1.6.7
-pytest==7.2.2
