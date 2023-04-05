@@ -11,6 +11,7 @@ import discord
 from discord.ext import commands
 
 import handlers
+import config
 
 # Felpörgetjük a véletlen szám generátorunkat, hogy biztos véletlen legyen az a véletlen.
 random.seed(datetime.now().timestamp())
@@ -46,6 +47,8 @@ async def on_ready():
 # az esetben az args = ('Tapsi','manó','ninja')
 # A handler funkciók minden esetben egy szöveggel térnek vissza, ezt vagy simán beírjuk a csatornába, 
 # ahonnan a parancs jött, vagy előtte mention-oljuk (@kukaccal) a felhasználót aki beírta a parancsot.
+
+# Álltalános és teszt parancsok
 @bot.command()
 async def vicc(ctx: commands.Context):
     """Véletlen vicc"""
@@ -66,23 +69,24 @@ async def help(ctx: commands.Context, *args):
     """Teszt parancs"""
     await ctx.send(handlers.handle_help(*args))
 
+# Játékkal kapcsolatos parancsok
 @bot.command()
 async def profil(ctx: commands.Context):
     """Karakter profil"""
-    await ctx.send(f"{ctx.author.mention} {handlers.handle_profil(ctx.author.id)}")
+    await ctx.send(f"{ctx.author.mention} {handlers.handle_profil(ctx.guild.id, ctx.author.id)}")
 
 @bot.command(aliases=["ujkarakter"])
 async def újkarakter(ctx: commands.Context, *args):
     """Új karakter alkotás"""
-    await ctx.send(f"{ctx.author.mention} {handlers.handle_újkarakter(ctx.author.id, *args)}")
+    await ctx.send(f"{ctx.author.mention} {handlers.handle_újkarakter(ctx.guild.id, ctx.author.id, *args)}")
 
 @bot.command(aliases=["oljmegmost"])
 async def öljmegmost(ctx: commands.Context):
     """Megöli a karaktered a lelkét elűzi a sötét síkra"""
-    await ctx.send(f"{ctx.author.mention} {handlers.handle_öljmegmost(ctx.author.id)}")
+    await ctx.send(f"{ctx.author.mention} {handlers.handle_öljmegmost(ctx.guild.id, ctx.author.id)}")
 
 # Végül elindítjuk magát a bot-ot. Megpróbál "betelefonálni" a Discord-ba a DISCORD_TOKEN segítségével.
 # Ha sikerül akkor elérhető lesz azokon a szervereken (guild-ekben), amikhez hozzá lett adva. A program egy
 # (végtelen) ciklusba kezd, ha bármi számára értelmes parancsot lát bárhol, megfuttatja a megfelelő handler
 # funkciót és vissza küldi a választ oda ahonnan a parancs jött.
-bot.run(os.getenv("DISCORD_TOKEN"))
+bot.run(config.DISCORD_TOKEN)

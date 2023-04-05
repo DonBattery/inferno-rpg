@@ -4,21 +4,38 @@
 # Például a játékos karakterek profiljait, az ismert helyszíneket, stb. Ezekkel a funkciókkal lehet
 # kivenni, betenni és keresni az adatbázisban.
 
-characters=[]
+import os
 
-def add_character(character):
-    characters.append(character)
+from tinydb import TinyDB, Query
 
-def get_character_by_id(id):
-    for character in characters:
-        if character["id"]==id:
-            return character
+import config
 
-def get_character_by_name(name):
-    for character in characters:
-        if character["name"]==name:
-            return character
+os.makedirs(config.DATA_FOLDER, exist_ok=True)
 
-def remove_character_by_id(id):
-    global characters
-    characters = [character for character in characters if character.get("id") != id]
+class Database:
+    def __init__(self, data_folder:str, guild_id:int) -> None:
+        self.guild_id = guild_id
+        self.file_path = os.path.join(data_folder, f"{guild_id}-database.json")
+        self.tynydb = TinyDB(self.file_path)
+        self.characters = self.tynydb.table("characters")
+
+    def add_character(self, character:dict):
+        self.characters.insert(character)
+
+    def get_character_by_id(self, id:int):
+        return self.characters.get(Query().id == id)
+
+    def get_character_by_name(self, name:str):
+        return self.characters.get(Query().name == name)
+
+    def remove_character_by_id(self, id):
+        self.characters.remove(Query().id == id)
+
+worlds = {}
+
+def get_world_data(guild_id:int) -> Database:
+    if guild_id in worlds:
+        return worlds[guild_id]
+    new_world = Database(config.DATA_FOLDER, guild_id)
+    worlds[guild_id] = new_world
+    return new_world

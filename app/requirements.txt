@@ -1,3 +1,5 @@
 discord.py==2.2.2
+python-decouple==3.8
 regex==2023.3.23
 texttable==1.6.7
+tinydb==4.7.1
