@@ -10,3 +10,6 @@
     pull: true
     env:
       DISCORD_TOKEN: "{{ discord_token }}"
+      DATA_FOLDER: "/storage"
+    volumes:
+      - "{{ data_volume_name }}:/storage"

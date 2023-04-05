@@ -3,5 +3,6 @@
 container_name: inferno-rpg
 container_image_name: donbattery/inferno-rpg
 container_image_tag: latest
+data_volume_name: inferno-rpg-data
 
 ...

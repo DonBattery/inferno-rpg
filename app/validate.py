@@ -13,12 +13,12 @@ import re
 import database
 import game_world
 
-def validate_name(name:str) -> tuple:
+def validate_name(guild_id:int, name:str) -> tuple:
     if len(name) < 3:
         return (False, "A Névnek legalább 3 karakter hosszúnak kell lennie.")
     if len(name) > 28:
         return (False, "A Név nem lehet hosszabb mint 28 karakter.")
-    if database.get_character_by_name(name):
+    if database.get_world_data(guild_id).get_character_by_name(name):
         return (False, f"A {name} név már foglalt.")
     return (True, "")
 

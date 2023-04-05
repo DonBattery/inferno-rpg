@@ -9,6 +9,8 @@ from texttable import Texttable
 
 from utility import to_text_box
 
+import json
+
 # Fajok
 races = {
     "ember": {
