@@ -1,0 +1,15 @@
+---
+jobs:
+  vadász:
+  pap:
+  íjász:
+
+races:
+  gyíklény:
+    min_strength: 22
+    max_strength: 12
+    min_agility: 23
+    max_agility: 114
+    min_cleverness: 33
+    max_cleverness: 123
+...

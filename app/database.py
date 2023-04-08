@@ -19,21 +19,29 @@ class Database:
         self.tynydb = TinyDB(self.file_path)
         self.characters = self.tynydb.table("characters")
 
-    def add_character(self, character:dict):
+    def add_character(self, character:dict) -> None:
         self.characters.insert(character)
 
-    def get_character_by_id(self, id:int):
+    def get_character_by_id(self, id:int) -> dict | None:
         return self.characters.get(Query().id == id)
 
-    def get_character_by_name(self, name:str):
+    def get_character_by_name(self, name:str) -> dict | None:
         return self.characters.get(Query().name == name)
 
-    def remove_character_by_id(self, id):
+    def remove_character_by_id(self, id) -> None:
         self.characters.remove(Query().id == id)
+
+    def get_all_character_names(self) -> list:
+        names = []
+        for character in self.characters.all():
+            name = character["name"]
+            if not name in names:
+                names.append(name)
+        return names
 
 worlds = {}
 
-def get_world_data(guild_id:int) -> Database:
+def get_guild_database(guild_id:int) -> Database:
     if guild_id in worlds:
         return worlds[guild_id]
     new_world = Database(config.DATA_FOLDER, guild_id)
