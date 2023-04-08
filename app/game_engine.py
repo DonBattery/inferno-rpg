@@ -29,6 +29,8 @@ def create_game_wolrd(data_folder: str) -> dict:
 
     return game_world
 
+import json
+
 # Fajok
 races = {
     "ember": {
