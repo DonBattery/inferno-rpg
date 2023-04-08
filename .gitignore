@@ -6,4 +6,4 @@ __pycache__
 app/.env
 ./env/
 .pytest_cache
-app-data
+app/app-data

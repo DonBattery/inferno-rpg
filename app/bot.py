@@ -3,7 +3,7 @@
 # Ez a program fő file-ja. Ezt indítjuk futtatjuk a parancssorból, 
 # itt rakjuk össze és indítjuk el, magát a Discord bot-ot.
 
-import os
+import sys
 import random
 from datetime import datetime
 
@@ -12,6 +12,19 @@ from discord.ext import commands
 
 import handlers
 import config
+import validate
+import game_engine
+import file_utility
+
+# Validáljuk a játék konfigurációs file-jait. Meg kell vizsgálnunk, hogy szabályosak-e és fel lehet-e belőlük építeni a világot.
+# Ha nem érvényes (valid) a konfiguráció, akkor kiírjuk, hogy miért nem, és kilépünk a programból.
+valid, msg = validate.validate_game_config_files(file_utility.get_config_files(config.CONFIG_FOLDER), game_engine.game_element_types)
+if not valid:
+    print(msg)
+    sys.exit(1)
+
+# Legyártjuk a világot a konfigurációs file-okból.
+world_of_inferno = game_engine.create_game_wolrd(config.CONFIG_FOLDER)
 
 # Felpörgetjük a véletlen szám generátorunkat, hogy biztos véletlen legyen az a véletlen.
 random.seed(datetime.now().timestamp())
@@ -66,8 +79,8 @@ async def teszt(ctx: commands.Context, *args):
 
 @bot.command()
 async def help(ctx: commands.Context, *args):
-    """Teszt parancs"""
-    await ctx.send(handlers.handle_help(*args))
+    """Help parancs"""
+    await ctx.send(handlers.handle_help(world_of_inferno, *args))
 
 # Játékkal kapcsolatos parancsok
 @bot.command()
@@ -78,7 +91,7 @@ async def profil(ctx: commands.Context):
 @bot.command(aliases=["ujkarakter"])
 async def újkarakter(ctx: commands.Context, *args):
     """Új karakter alkotás"""
-    await ctx.send(f"{ctx.author.mention} {handlers.handle_újkarakter(ctx.guild.id, ctx.author.id, *args)}")
+    await ctx.send(f"{ctx.author.mention} {handlers.handle_újkarakter(world_of_inferno, ctx.guild.id, ctx.author.id, *args)}")
 
 @bot.command(aliases=["oljmegmost"])
 async def öljmegmost(ctx: commands.Context):
@@ -88,5 +101,5 @@ async def öljmegmost(ctx: commands.Context):
 # Végül elindítjuk magát a bot-ot. Megpróbál "betelefonálni" a Discord-ba a DISCORD_TOKEN segítségével.
 # Ha sikerül akkor elérhető lesz azokon a szervereken (guild-ekben), amikhez hozzá lett adva. A program egy
 # (végtelen) ciklusba kezd, ha bármi számára értelmes parancsot lát bárhol, megfuttatja a megfelelő handler
-# funkciót és vissza küldi a választ oda ahonnan a parancs jött.
+# funkciót és vissza küldi a választ oda (abba a guild-be, arra a csatornára) ahonnan a parancs jött.
 bot.run(config.DISCORD_TOKEN)

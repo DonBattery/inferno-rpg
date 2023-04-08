@@ -1,9 +1,8 @@
-# utility.py
+# text_utility.py
 
-# Ebben a file-ban segéd azaz utility funkciókat találunk. Ezek mindenféle apró feladat ellátására valók.
-# Például egy bemeneti szövegből Discord-os code-block-ot csinálni egy ilyen apró feladat.
-
-import validate
+# Ebben a file-ban segéd azaz utility funkciókat találunk, szövegek előállításához.
+# Például egy bemeneti szövegből Discord-os code-block-ot csinálunk, help szöveget generálunk,
+# vagy kimnodatunk Csontival egy mondatot.
 
 def to_text_box(input_text:str) -> str:
     "Egy Discord-os szöveg dobozt csinál a bemeneti szövegből"
@@ -86,9 +85,6 @@ def warp_words_to_box(words:list, box_width:int) -> list:
     return justify_box(result, box_width)
 
 def csonti_mondja2(*args, max_width:int) -> str:
-    valid, error = validate.validate_csonti_pinput(''.join(args))
-    if not valid:
-        return csonti_mondja2(*error.split(' '), max_width=max_width)
     res = warp_words_to_box(args, max_width - 12)
     width = 0
     for line in res:

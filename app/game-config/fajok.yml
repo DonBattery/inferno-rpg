@@ -1,0 +1,12 @@
+---
+
+races:
+  ember:
+    min_strength: 2
+    max_strength: 10
+    min_agility: 2
+    max_agility: 11
+    min_cleverness: 3
+    max_cleverness: 13
+
+...

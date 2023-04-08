@@ -5,9 +5,31 @@
 
 import random
 
+import yaml
 from texttable import Texttable
 
-from utility import to_text_box
+from text_utility import to_text_box
+from file_utility import get_config_files
+
+game_element_types = ["commands", "races", "jobs", "places", "beasts", "items", "recipts", "magics", "travels"]
+
+def create_game_wolrd(data_folder: str) -> dict:
+    game_world = {}
+
+    for config_file_path in get_config_files(data_folder):
+        with open(config_file_path, "r") as config_file:
+            config_data = yaml.safe_load(config_file)
+            for game_element_type in game_element_types:
+                if game_element_type in config_data:
+                    for game_element_name, game_element_value in config_data[game_element_type].items():
+                        if game_element_name in game_world.get(game_element_type, {}):
+                            game_world[game_element_type][game_element_name].update(game_element_value)
+                        else:
+                            game_world.setdefault(game_element_type, {}).update({game_element_name: game_element_value})
+
+    return game_world
+
+import json
 
 import json
 
