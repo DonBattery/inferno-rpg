@@ -5,6 +5,7 @@
 # kivenni, betenni és keresni az adatbázisban.
 
 import os
+from typing import Dict, Optional
 
 from tinydb import TinyDB, Query
 
@@ -22,10 +23,10 @@ class Database:
     def add_character(self, character:dict) -> None:
         self.characters.insert(character)
 
-    def get_character_by_id(self, id:int) -> dict | None:
+    def get_character_by_id(self, id:int) -> Optional[Dict]:
         return self.characters.get(Query().id == id)
 
-    def get_character_by_name(self, name:str) -> dict | None:
+    def get_character_by_name(self, name:str) -> Optional[Dict]:
         return self.characters.get(Query().name == name)
 
     def remove_character_by_id(self, id) -> None:
